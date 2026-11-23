@@ -5,9 +5,17 @@ import shutil
 
 import lxml.etree as ET
 
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+if not os.environ.get('REPO_DIR'):
+    raise RuntimeError('Set the REPO_DIR environment variable, e.g. in a .env file (see README)')
+REPO_DIR = os.path.expanduser(os.environ['REPO_DIR'])
+
 
 pdfpage_objects = []
-for root, dirs, files in os.walk('Cached_Cdm_files'):
+for root, dirs, files in os.walk(REPO_DIR):
     if 'Cpd' in root and dirs != []:
         if len(dirs) > 0:
             for file in files:

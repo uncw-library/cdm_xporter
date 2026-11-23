@@ -2,6 +2,14 @@
 
 import os
 
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+if not os.environ.get('REPO_DIR'):
+    raise RuntimeError('Set the REPO_DIR environment variable, e.g. in a .env file (see README)')
+REPO_DIR = os.path.expanduser(os.environ['REPO_DIR'])
+
 
 we_dont_migrate = {'p16313coll70', 'p120701coll11', 'LSUHSCS_JCM', 'UNO_SCC', 'p15140coll36', 'p15140coll57',
                    'p15140coll13', 'p15140coll11', 'p16313coll32', 'p16313coll49', 'p16313coll50',
@@ -23,10 +31,11 @@ we_dont_migrate = {'p16313coll70', 'p120701coll11', 'LSUHSCS_JCM', 'UNO_SCC', 'p
 
 not_converted_yet = []
 
-for root, dirs, files in os.walk('/media/garrett_armstrong/U/Cached_Cdm_files'):
-    if len(root.split('/')) > 5:
-        if root.split('/')[5] in we_dont_migrate:
-            print('skipping', root.split('/')[5])
+for root, dirs, files in os.walk(os.path.join(REPO_DIR, 'p17190coll7')):
+    rel_parts = os.path.relpath(root, REPO_DIR).split(os.sep)
+    if len(rel_parts) > 3:
+        if rel_parts[3] in we_dont_migrate:
+            print('skipping', rel_parts[3])
             continue
     lowercase_files = {i.lower() for i in files}
     for file in files:

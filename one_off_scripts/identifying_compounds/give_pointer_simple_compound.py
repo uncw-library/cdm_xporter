@@ -3,7 +3,15 @@
 import os
 import re
 
-print(type(os.walk('/media/james/BlackToshiba/Cached_Cdm_files')))
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+if not os.environ.get('REPO_DIR'):
+    raise RuntimeError('Set the REPO_DIR environment variable, e.g. in a .env file (see README)')
+REPO_DIR = os.path.expanduser(os.environ['REPO_DIR'])
+
+print(type(os.walk(REPO_DIR)))
 
 simples_dict = dict()
 compounds_dict = dict()
@@ -11,8 +19,8 @@ alias_smpl_cmpds = dict()
  
 compiled_re = re.compile('[0-9]+.xml')
 
-for root, dirs, files in os.walk('/media/james/BlackToshiba/Cached_Cdm_files'):
-    root_pos = [i for i in root.split('/')].index('Cached_Cdm_files')
+for root, dirs, files in os.walk(REPO_DIR):
+    root_pos = [i for i in root.split('/')].index(os.path.basename(os.path.normpath(REPO_DIR)))
     if len(root.split('/')) == root_pos + 3:
         compounds_dict[root.split('/')[root_pos+1]] = dirs
         alias = root.split('/')[root_pos + 1]

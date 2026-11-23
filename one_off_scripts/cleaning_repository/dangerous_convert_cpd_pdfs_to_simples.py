@@ -14,6 +14,14 @@ import os
 import shutil
 import lxml.etree as ET
 
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+if not os.environ.get('REPO_DIR'):
+    raise RuntimeError('Set the REPO_DIR environment variable, e.g. in a .env file (see README)')
+REPO_DIR = os.path.expanduser(os.environ['REPO_DIR'])
+
 
 def extract_ptr_title(page_elem):
     page_dict = {elem.tag: elem.text for elem in page_elem}
@@ -97,19 +105,19 @@ def process_json(cpd_subfolder):
 
 
 def main(cpd_dir):
-    for root, dirs, files in os.walk('/home/francis/Desktop/PagesToSimplesLSU_LNP/Cpd/'):
+    for root, dirs, files in os.walk(os.path.join(REPO_DIR, 'LSU_LNP', 'Cpd')):
         for subdir in dirs:
             process_json(os.path.join(root, subdir))
 
 
 if __name__ == "__main__":
     print('be nervous about this script\nit is intended to only be used for certain types of compound pdf collections\nlike some items in LSU_LNP.\nIf you use it against a healthy collection or a healthy part of LSU_LNP,\nit will destroy your source data')
-    # main()  # accepts cpd_subfolders like:  '/home/francis/Cached_Cdm_files/LSU_LNP/Cpd/5134/'
+    # main()  # accepts cpd_subfolders like:  '<REPO_DIR>/LSU_LNP/Cpd/5134/'
 
 
     # all_page_jsons = [
     #     os.path.join(root, file)
-    #     for root, dirs, files in os.walk('/media/francis/Storage/LNP_Source_datas/CachedCdmFiles/LSU_LNP/Cpd/5134/')
+    #     for root, dirs, files in os.walk(os.path.join(REPO_DIR, 'LSU_LNP', 'Cpd', '5134'))
     #     for file in files
     #     if ('.json' in file) and not('_parent.json' in file)]
 
@@ -117,8 +125,8 @@ if __name__ == "__main__":
     # for page in all_page_jsons:
     #     check_duplicates(cpd_metadata, parse_json(page))
 
-    # cpd_metadata = parse_json('/media/francis/Storage/LNP_Source_datas/CachedCdmFiles/LSU_LNP/Cpd/5134.json')
-    # page_metadata = parse_json('/media/francis/Storage/LNP_Source_datas/CachedCdmFiles/LSU_LNP/Cpd/5134/5129.json')
+    # cpd_metadata = parse_json(os.path.join(REPO_DIR, 'LSU_LNP', 'Cpd', '5134.json'))
+    # page_metadata = parse_json(os.path.join(REPO_DIR, 'LSU_LNP', 'Cpd', '5134', '5129.json'))
 
     # for k, v in cpd_metadata.items():
     #     print(k, '\t\t', v)

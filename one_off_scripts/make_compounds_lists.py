@@ -3,8 +3,17 @@
 import os
 import lxml.etree as etree
 
+from dotenv import load_dotenv, find_dotenv
 
-starting_dir = '../Cached_Cdm_files'
+load_dotenv(find_dotenv())
+
+if not os.environ.get('REPO_DIR'):
+    raise RuntimeError('Set the REPO_DIR environment variable, e.g. in a .env file (see README)')
+REPO_DIR = os.path.expanduser(os.environ['REPO_DIR'])
+
+
+starting_dir = REPO_DIR
+REPO_NAME = os.path.basename(os.path.normpath(REPO_DIR))
 
 
 def identify_simpl_compound_pointers(root, files):
@@ -30,7 +39,7 @@ def identify_simpl_compound_pointers(root, files):
 
 def write_compounds_config_list(root, compound_parents):
     os.makedirs('output', exist_ok=True)
-    alias_level = root.split('/').index('Cached_Cdm_files') + 1
+    alias_level = root.split('/').index(REPO_NAME) + 1
     alias = root.split('/')[alias_level]
     print(alias, compound_parents)
     file_text = ''.join("{}\n".format(i) for i in compound_parents)
@@ -40,7 +49,7 @@ def write_compounds_config_list(root, compound_parents):
 
 if __name__ == '__main__':
     for root, dirs, files in os.walk(starting_dir):
-        if root.split('/')[-2] == 'Cached_Cdm_files':
+        if root.split('/')[-2] == REPO_NAME:
             print(root)
             simple_pointers, compound_parents = identify_simpl_compound_pointers(root, files)
             write_compounds_config_list(root, compound_parents)

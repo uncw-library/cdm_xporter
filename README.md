@@ -10,7 +10,7 @@ The output of scrape_cDM.py is DublinCore metadata, as found in contentdm.  Thes
 
 `python3 scrape_cDM`
 
-look for the output in "../Cached_Cdm_files"
+look for the output in the directory set as REPO_DIR in .env
 
 cDM_api_call.py is merely a group of frequently used contentDM API calls.  It's useful as an import.  You will want to change the string specifying your contentDM server address.
 
@@ -21,6 +21,9 @@ Make a .env file:
 CDM_API_SERVER=server12345
 CDM_BINARY_SERVER=cdm12345
 COLLECTION_ALIAS=p12345coll1
+REPO_DIR=../Cached_Cdm_files
 ```
 
 COLLECTION_ALIAS is the collection the first section of scrape_cDM.py scrapes.  It can be a comma-separated list, e.g. `COLLECTION_ALIAS=p12345coll1,p12345coll2`.
+
+REPO_DIR is the directory the scraped files are written to (required; the scripts raise an error if it is unset).

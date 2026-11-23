@@ -8,10 +8,14 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
+if not os.environ.get('REPO_DIR'):
+    raise RuntimeError('Set the REPO_DIR environment variable, e.g. in a .env file (see README)')
+REPO_DIR = os.path.expanduser(os.environ['REPO_DIR'])
+
 
 def list_alias_cmp_types(alias):
 
-    alias_dir = os.path.join(os.pardir, os.pardir, 'Cached_Cdm_files', alias, 'Cpd')
+    alias_dir = os.path.join(REPO_DIR, alias, 'Cpd')
     if not os.path.isdir(alias_dir):
         return []
     cpd_files = [i for i in os.listdir(alias_dir) if '_cpd.xml' in i]

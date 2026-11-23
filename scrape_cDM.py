@@ -367,7 +367,9 @@ def setup_logging():
 
 if __name__ == '__main__':
     setup_logging()
-    repo_dir = os.path.join('..', 'Cached_Cdm_files')
+    if not os.environ.get('REPO_DIR'):
+        raise RuntimeError('Set the REPO_DIR environment variable, e.g. in a .env file (see README)')
+    repo_dir = os.path.expanduser(os.environ['REPO_DIR'])
 
     """ Get specific collections' metadata/binaries """
 

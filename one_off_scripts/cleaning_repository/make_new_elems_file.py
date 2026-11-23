@@ -2,15 +2,23 @@
 
 import os
 
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+if not os.environ.get('REPO_DIR'):
+    raise RuntimeError('Set the REPO_DIR environment variable, e.g. in a .env file (see README)')
+REPO_DIR = os.path.expanduser(os.environ['REPO_DIR'])
+
 
 pointers = [
     os.path.splitext(file)[0]
-    for file in os.listdir('/media/francis/Storage/LNP_Source_datas/CachedCdmFilesReady/LSU_LNP/')
+    for file in os.listdir(os.path.join(REPO_DIR, 'LSU_LNP'))
     if os.path.splitext(file)[1] == '.pdf'
 ]
 cpd_pointers = [
     os.path.splitext(file)[0].replace('_cpd', '')
-    for file in os.listdir('/media/francis/Storage/LNP_Source_datas/CachedCdmFilesReady/LSU_LNP/Cpd/')
+    for file in os.listdir(os.path.join(REPO_DIR, 'LSU_LNP', 'Cpd'))
     if '_cpd.xml' in file
 ]
 

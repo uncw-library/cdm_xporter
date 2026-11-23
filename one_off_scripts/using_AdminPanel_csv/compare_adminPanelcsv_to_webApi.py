@@ -4,6 +4,14 @@ import os
 import csv
 import lxml.etree as etree
 
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+if not os.environ.get('REPO_DIR'):
+    raise RuntimeError('Set the REPO_DIR environment variable, e.g. in a .env file (see README)')
+REPO_DIR = os.path.expanduser(os.environ['REPO_DIR'])
+
 
 def report_expected_objs(filename):
     with open(filename, 'r') as f:
@@ -27,7 +35,7 @@ def report_expected_objs(filename):
 
 
 def report_pulled_objs(alias):
-    cached_alias_dir = os.path.join(os.pardir, os.pardir, 'Cached_Cdm_files', alias)
+    cached_alias_dir = os.path.join(REPO_DIR, alias)
     full_set_downloaded_pointers = {'cpd': set(), 'simple': set()}
 
     for file in os.listdir(cached_alias_dir):
